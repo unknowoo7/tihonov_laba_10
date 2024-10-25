@@ -1,7 +1,6 @@
 using laba_10.Components;
 using laba_10.Interfaces;
 using laba_10.Models;
-using laba_10.ServiceExtensions;
 using laba_10.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +16,7 @@ builder.Services.AddDbContext<DatabaseContext>(option =>
 );
 
 builder.Services.AddTransient<IManager, ManagerService>();
-//builder.Services.AddServices();
+builder.Services.AddTransient<IProject, ProjectService>();
 
 var app = builder.Build();
 
