@@ -1,6 +1,9 @@
 ﻿@page "/"
 @using Shared.Models
 @using laba_10.Interfaces
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
@@ -25,13 +28,14 @@
         <td>@project.Description</td>
         <td>@project.Price</td>
         <td>
-          <input value="@project.Manager?.Id" />
+          <input type="number" value="@project.Manager?.Id" @onchange="@((ChangeEventArgs e) => UpdateProject(project.Id, e.Value.ToString()))" />
+          <p>Value: @item</p>
         </td>
         <td>
           <input value="@project.Price" />
         </td>
         <td>
-          <button @onclick="@(e => DeleteProject(project.Id))">
+          <button @onclick="() => DeleteProject(project.Id)">
             X
           </button>
         </td>
@@ -59,6 +63,7 @@
 </table>
 
 @code {
+  string item = "hello";
   [Inject]
   public required IManager ManagerService { get; set; }
 
@@ -74,7 +79,14 @@
     managers = @ManagerService.GetManagerDetails();
   }
 
-  async void DeleteProject(int id)
+  void UpdateProject(int id, string managerId) {
+    Project project = ProjectService.GetProjectData(id);
+
+    project.ManagerId = int.Parse(managerId);
+    ProjectService.UpdateProject(project);
+  }
+
+  void DeleteProject(int id)
   {
     ProjectService.DeleteProject(id);
   }
