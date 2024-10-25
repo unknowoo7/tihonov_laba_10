@@ -1,5 +1,4 @@
 ﻿using Shared.Models;
-using laba_10.Client.Pages;
 using Microsoft.EntityFrameworkCore;
 
 namespace laba_10.Models

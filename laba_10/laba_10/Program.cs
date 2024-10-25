@@ -1,6 +1,8 @@
-using laba_10.Client.Pages;
 using laba_10.Components;
+using laba_10.Interfaces;
 using laba_10.Models;
+using laba_10.ServiceExtensions;
+using laba_10.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<DatabaseContext>(option =>
   option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddTransient<IManager, ManagerService>();
+//builder.Services.AddServices();
 
 var app = builder.Build();
 
