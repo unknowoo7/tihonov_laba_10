@@ -16,7 +16,7 @@ namespace laba_10.Services
 
     public Task<bool> DeleteProject(int id)
     {
-      var ExistingProject =_dbContext.Projects.Where(x => x.Id == id).FirstOrDefault();
+      var ExistingProject = _dbContext.Projects.Where(x => x.Id == id).FirstOrDefault();
       if (ExistingProject != null)
       {
         _dbContext.Projects.Remove(ExistingProject);
@@ -32,20 +32,7 @@ namespace laba_10.Services
 
     public Project GetProjectData(int id)
     {
-      try
-      {
-        Project? project = _dbContext.Projects.Find(id);
-        if (project == null)
-        {
-          throw new ArgumentNullException();
-        }
-
-        return project;
-      }
-      catch
-      {
-        throw new NotImplementedException();
-      }
+      return _dbContext.Projects.Where(x => x.Id == id).FirstOrDefault();
     }
 
     public List<Project> GetProjectDetails()
@@ -60,17 +47,33 @@ namespace laba_10.Services
       }
     }
 
-    public void UpdateProject(Project project)
+    public Task<bool> UpdateProject(Project project)
     {
-      try
+      var ExistingProject = _dbContext.Projects.Where(x => x.Id == project.Id).FirstOrDefault();
+
+      if (ExistingProject != null)
       {
-        _dbContext.Entry(project).State = EntityState.Modified;
+        ExistingProject.Name = project.Name;
+        ExistingProject.Description = project.Description;
+        ExistingProject.Price = project.Price;
+        ExistingProject.ManagerId = project.ManagerId;
+        _dbContext.Update(ExistingProject);
         _dbContext.SaveChanges();
       }
-      catch
+      else
       {
-        throw new NotImplementedException();
+        return Task.FromResult(false);
       }
+      return Task.FromResult(true);
+      //try
+      //{
+      //  _dbContext.Entry(project).State = EntityState.Modified;
+      //  _dbContext.SaveChanges();
+      //}
+      //catch
+      //{
+      //  throw new NotImplementedException();
+      //}
     }
   }
 }
