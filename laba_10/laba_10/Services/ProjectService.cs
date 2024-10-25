@@ -14,23 +14,20 @@ namespace laba_10.Services
       _dbContext = dbContext;
     }
 
-    public void DeleteProject(int id)
+    public Task<bool> DeleteProject(int id)
     {
-      try
+      var ExistingProject =_dbContext.Projects.Where(x => x.Id == id).FirstOrDefault();
+      if (ExistingProject != null)
       {
-        Project? project = _dbContext.Projects.Find(id);
-        if (project == null)
-        {
-          throw new ArgumentNullException();
-        }
-
-        _dbContext.Projects.Remove(project);
+        _dbContext.Projects.Remove(ExistingProject);
         _dbContext.SaveChanges();
       }
-      catch 
+      else
       {
-        throw new NotImplementedException();
+        return Task.FromResult(false);
       }
+
+      return Task.FromResult(true);
     }
 
     public Project GetProjectData(int id)

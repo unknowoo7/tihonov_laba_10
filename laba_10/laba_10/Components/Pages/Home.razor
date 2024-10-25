@@ -32,7 +32,7 @@
           <p>Value: @item</p>
         </td>
         <td>
-          <input value="@project.Price" />
+          <input @bind="@project.Price" />
         </td>
         <td>
           <button @onclick="() => DeleteProject(project.Id)">
@@ -86,8 +86,15 @@
     ProjectService.UpdateProject(project);
   }
 
-  void DeleteProject(int id)
+  Task<bool> DeleteProject(int id)
   {
-    ProjectService.DeleteProject(id);
+    var result = ProjectService.DeleteProject(id);
+
+    if (result.IsCompleted) 
+    {
+      projects = @ProjectService.GetProjectDetails();
+    }
+
+    return result;
   }
 }
